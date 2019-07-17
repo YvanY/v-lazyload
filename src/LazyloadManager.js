@@ -45,7 +45,7 @@ export class LazyloadManager {
     const winHeight = window.screen.height
     const viewHeight = window.innerHeight
     const { top, bottom } = el.getBoundingClientRect()
-    const inView = top > 0 && top < viewHeight || bottom > 0 && bottom < viewHeight
+    const inView = top >= 0 && top < viewHeight || bottom >= 0 && bottom < viewHeight
     const inPrevView = bottom > -winHeight && bottom < 0
     const inNextView = top > viewHeight && top < viewHeight + winHeight
     const inSiblingView = inPrevView || inNextView

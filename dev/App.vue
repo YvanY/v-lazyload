@@ -1,6 +1,7 @@
 <template>
   <main>
-    <div><img v-lazyload :data-loading="loading" data-src="https://source.unsplash.com/CeWNEEsHPbA"></div>
+    <!-- dynamic src -->
+    <div><img v-lazyload :data-src="src"></div>
     <div><img v-lazyload :data-loading="loading" data-src="https://source.unsplash.com/uy5t-CJuIK4"></div>
     <div><img v-lazyload :data-loading="loading" data-src="https://source.unsplash.com/KHBvwAnWFmc"></div>
     <div><img v-lazyload :data-loading="loading" data-src="https://source.unsplash.com/A7nK49HCqSI"></div>
@@ -8,7 +9,8 @@
     <div><img v-lazyload :data-loading="loading" data-src="https://source.unsplash.com/iqHBu3dBLZU"></div>
     <div><img v-lazyload :data-loading="loading" data-src="https://source.unsplash.com/m_5_YuDRnE0"></div>
     <div><img v-lazyload :data-loading="loading" data-src="https://source.unsplash.com/ljsEHTQoR5M"></div>
-    <div><img v-lazyload :data-loading="loading" data-src="https://source.unsplash.com/Sn_eW7KQdoY"></div>
+    <!-- hide -->
+    <div><img v-show="false" v-lazyload :data-loading="loading" data-src="https://source.unsplash.com/Sn_eW7KQdoY"></div>
   </main>
 </template>
 
@@ -19,8 +21,13 @@ export default {
   el: '#app',
   data() {
     return {
+      src: loading,
       loading
     }
+  },
+
+  created() {
+    setTimeout(() => this.src = 'https://source.unsplash.com/CeWNEEsHPbA', 3000)
   }
 }
 </script>
