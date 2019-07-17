@@ -4,7 +4,8 @@
   "description": "a vue directive for image lazyload",
   "main": "src/index.js",
   "scripts": {
-    "start": "webpack-dev-server --hot --config dev/webpack.config.js"
+    "start": "webpack-dev-server --hot --config dev/webpack.config.js",
+    "build": "rollup -c rollup.config.js"
   },
   "repository": {
     "type": "git",
@@ -27,5 +28,11 @@
     "webpack": "^4.35.3",
     "webpack-cli": "^3.3.5",
     "webpack-dev-server": "^3.7.2"
+  },
+  "dependencies": {
+    "@babel/core": "^7.5.4",
+    "@babel/preset-env": "^7.5.4",
+    "rollup": "^1.17.0",
+    "rollup-plugin-babel": "^4.3.3"
   }
 }

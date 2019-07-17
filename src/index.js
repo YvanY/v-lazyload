@@ -11,3 +11,4 @@ if (window.Vue) {
 
 lazyload.install = install
 export default lazyload
+export { default as LazyloadManager } from './LazyloadManager'
