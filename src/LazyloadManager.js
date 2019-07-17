@@ -1,24 +1,12 @@
 const CLASS_PREFIX = 'lazyload'
 
 const STATE_CLASS = {
-  VIEW: {
-    IN_VIEW: `${CLASS_PREFIX}-in-view`,
-    OUT_VIEW: `${CLASS_PREFIX}-out-view`,
-    IN_PREV_VIEW: `${CLASS_PREFIX}-in-prev-view`,
-    IN_NEXT_VIEW: `${CLASS_PREFIX}-in-next-view`,
-    IN_SIBLING_VIEW: `${CLASS_PREFIX}-in-sibling-view`
-  },
-  LOAD: {
-    LOADING: `${CLASS_PREFIX}-loading`,
-    LOADED: `${CLASS_PREFIX}-loaded`,
-    ERROR: `${CLASS_PREFIX}-error`
-  }
+  LOADING: `${CLASS_PREFIX}-loading`,
+  LOADED: `${CLASS_PREFIX}-loaded`,
+  ERROR: `${CLASS_PREFIX}-error`
 }
 
-const STATE_CLASS_LIST = {
-  VIEW: Object.values(STATE_CLASS.VIEW),
-  LOAD: Object.values(STATE_CLASS.LOAD)
-}
+const STATE_CLASS_LIST = Object.values(STATE_CLASS)
 
 export class LazyloadManager {
   constructor() {
@@ -53,8 +41,7 @@ export class LazyloadManager {
       return
     }
 
-    const changeViewClass = this.changeClass.bind(this, STATE_CLASS_LIST.VIEW, el)
-    const changeLoadClass = this.changeClass.bind(this, STATE_CLASS_LIST.LOAD, el)
+    const changeStateClass = this.changeClass.bind(this, el)
     const winHeight = window.screen.height
     const viewHeight = window.innerHeight
     const { top, bottom } = el.getBoundingClientRect()
@@ -67,21 +54,13 @@ export class LazyloadManager {
       if (loadingSrc) {
         el.src = loadingSrc
       }
-
-      changeViewClass([
-        STATE_CLASS.VIEW.IN_SIBLING_VIEW,
-        inPrevView ? STATE_CLASS.VIEW.IN_PREV_VIEW : STATE_CLASS.VIEW.IN_NEXT_VIEW
-      ])
     } else if (inView) {
-      changeViewClass(STATE_CLASS.VIEW.IN_VIEW)
-      changeLoadClass(STATE_CLASS.LOAD.LOADING)
+      changeStateClass(STATE_CLASS.LOADING)
       el.addEventListener('load', () => {
-        changeViewClass()
-        changeLoadClass(STATE_CLASS.LOAD.LOADED)
+        changeStateClass(STATE_CLASS.LOADED)
       }, { once: true })
       el.addEventListener('error', () => {
-        changeViewClass()
-        changeLoadClass(STATE_CLASS.LOAD.ERROR)
+        changeStateClass(STATE_CLASS.ERROR)
       }, { once: true })
 
       if (el.src) {
@@ -94,8 +73,6 @@ export class LazyloadManager {
       }
 
       this.remove(el)
-    } else {
-      changeViewClass(STATE_CLASS.VIEW.OUT_VIEW)
     }
   }
 
@@ -108,9 +85,9 @@ export class LazyloadManager {
     })
   }
 
-  changeClass(list, el, items = []) {
+  changeClass(el, items = []) {
     const adds = [CLASS_PREFIX, ...Array.isArray(items) ? items : [items]].filter(item => !!item)
-    const removes = Array.from(el.classList).filter(item => list.includes(item))
+    const removes = Array.from(el.classList).filter(item => STATE_CLASS_LIST.includes(item))
 
     el.classList.remove(...removes.filter(item => !adds.includes(item)))
 
