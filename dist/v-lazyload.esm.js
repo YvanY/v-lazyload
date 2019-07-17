@@ -62,30 +62,21 @@ function () {
         el.src = loadingSrc;
       }
     } else if (inView) {
-      changeStateClass(STATE_CLASS.LOADING);
-      el.addEventListener('load', function () {
+      var img = new Image();
+      img.addEventListener('load', function () {
         changeStateClass(STATE_CLASS.LOADED);
-      }, {
-        once: true
-      });
-      el.addEventListener('error', function () {
-        changeStateClass(STATE_CLASS.ERROR);
-      }, {
-        once: true
-      });
-
-      if (el.src) {
-        var img = new Image();
-
-        img.onload = img.onerror = function () {
-          return el.src = src;
-        };
-
-        img.src = src;
-      } else {
         el.src = src;
-      }
-
+      }, {
+        once: true
+      });
+      img.addEventListener('error', function () {
+        changeStateClass(STATE_CLASS.ERROR);
+        el.src = src;
+      }, {
+        once: true
+      });
+      changeStateClass(STATE_CLASS.LOADING);
+      img.src = src;
       this.remove(el);
     }
   };
