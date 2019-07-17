@@ -55,23 +55,19 @@ export class LazyloadManager {
         el.src = loadingSrc
       }
     } else if (inView) {
-      changeStateClass(STATE_CLASS.LOADING)
-      el.addEventListener('load', () => {
+      const img = new Image()
+
+      img.addEventListener('load', () => {
         changeStateClass(STATE_CLASS.LOADED)
-      }, { once: true })
-      el.addEventListener('error', () => {
-        changeStateClass(STATE_CLASS.ERROR)
-      }, { once: true })
-
-      if (el.src) {
-        const img = new Image()
-
-        img.onload = img.onerror = () => el.src = src
-        img.src = src
-      } else {
         el.src = src
-      }
+      }, { once: true })
+      img.addEventListener('error', () => {
+        changeStateClass(STATE_CLASS.ERROR)
+        el.src = src
+      }, { once: true })
 
+      changeStateClass(STATE_CLASS.LOADING)
+      img.src = src
       this.remove(el)
     }
   }
