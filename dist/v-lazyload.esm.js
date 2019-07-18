@@ -1,3 +1,4 @@
+var PLACEHOLDER_IMG = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==';
 var CLASS_PREFIX = 'lazyload';
 var STATE_CLASS = {
   LOADING: CLASS_PREFIX + "-loading",
@@ -20,7 +21,7 @@ function () {
 
   _proto.add = function add(el) {
     this.els.add(el);
-    this.changeClass(el);
+    this.loadPlaceholderImg(el);
     this.intersectionObserver.observe(el);
     this.checkIntersectionLegacy(el);
 
@@ -64,7 +65,13 @@ function () {
   _proto.checkIntersection = function checkIntersection(intEntry) {
     if (intEntry.intersectionRatio) {
       this.loadOriginImg(intEntry.target);
+      this.remove(intEntry.target);
     }
+  };
+
+  _proto.loadPlaceholderImg = function loadPlaceholderImg(el) {
+    this.changeClass(el);
+    el.src = PLACEHOLDER_IMG;
   };
 
   _proto.loadLoadingImg = function loadLoadingImg(el) {
