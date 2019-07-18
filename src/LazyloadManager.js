@@ -42,10 +42,6 @@ export class LazyloadManager {
   }
 
   checkIntersectionLegacy(el) {
-    if (!el.dataset.src) {
-      return
-    }
-
     const winHeight = window.screen.height
     const viewHeight = window.innerHeight
     const { top, bottom } = el.getBoundingClientRect()
@@ -59,9 +55,11 @@ export class LazyloadManager {
   }
 
   checkIntersection(intEntry) {
+    const el = intEntry.target
+
     if (intEntry.intersectionRatio) {
-      this.loadOriginImg(intEntry.target)
-      this.remove(intEntry.target)
+      this.loadOriginImg(el)
+      this.remove(el)
     }
   }
 
@@ -80,6 +78,11 @@ export class LazyloadManager {
 
   loadOriginImg(el) {
     const src = el.dataset.src
+
+    if (!src) {
+      return
+    }
+
     const img = new Image()
 
     img.addEventListener('load', () => {
