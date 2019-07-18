@@ -42,10 +42,6 @@ function () {
   };
 
   _proto.checkIntersectionLegacy = function checkIntersectionLegacy(el) {
-    if (!el.dataset.src) {
-      return;
-    }
-
     var winHeight = window.screen.height;
     var viewHeight = window.innerHeight;
 
@@ -63,9 +59,11 @@ function () {
   };
 
   _proto.checkIntersection = function checkIntersection(intEntry) {
+    var el = intEntry.target;
+
     if (intEntry.intersectionRatio) {
-      this.loadOriginImg(intEntry.target);
-      this.remove(intEntry.target);
+      this.loadOriginImg(el);
+      this.remove(el);
     }
   };
 
@@ -86,6 +84,11 @@ function () {
     var _this = this;
 
     var src = el.dataset.src;
+
+    if (!src) {
+      return;
+    }
+
     var img = new Image();
     img.addEventListener('load', function () {
       _this.changeClass(el, STATE_CLASS.LOADED);
