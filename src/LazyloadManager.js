@@ -59,6 +59,7 @@ export class LazyloadManager {
   checkIntersection(intEntry) {
     if (intEntry.intersectionRatio) {
       this.loadOriginImg(intEntry.target)
+      this.remove(intEntry.target)
     }
   }
 
