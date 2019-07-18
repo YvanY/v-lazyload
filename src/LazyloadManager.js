@@ -12,73 +12,92 @@ export class LazyloadManager {
   constructor() {
     this.rafId = null
     this.els = new Set()
-    this.handleViewportChange = this.handleViewportChange.bind(this)
+    this.handleIntersectionChangeLegacy = this.handleIntersectionChangeLegacy.bind(this)
+    this.handleIntersectionChange = this.handleIntersectionChange.bind(this)
+    this.intersectionObserver = new IntersectionObserver(this.handleIntersectionChange)
   }
 
   add(el) {
     this.els.add(el)
-    this.checkEl(el)
+    this.changeClass(el)
+    this.intersectionObserver.observe(el)
+    this.checkIntersectionLegacy(el)
 
     if (this.els.size === 1) {
-      window.addEventListener('scroll', this.handleViewportChange)
-      window.addEventListener('resize', this.handleViewportChange)
+      window.addEventListener('scroll', this.handleIntersectionChangeLegacy)
+      window.addEventListener('resize', this.handleIntersectionChangeLegacy)
     }
   }
 
   remove(el) {
     this.els.delete(el)
+    this.intersectionObserver.unobserve(el)
 
     if (this.els.size === 0) {
-      window.removeEventListener('scroll', this.handleViewportChange)
-      window.removeEventListener('resize', this.handleViewportChange)
+      window.removeEventListener('scroll', this.handleIntersectionChangeLegacy)
+      window.removeEventListener('resize', this.handleIntersectionChangeLegacy)
     }
   }
 
-  checkEl(el) {
-    const { loading: loadingSrc, src } = el.dataset
-
-    if (!src) {
+  checkIntersectionLegacy(el) {
+    if (!el.dataset.src) {
       return
     }
 
-    const changeStateClass = this.changeClass.bind(this, el)
     const winHeight = window.screen.height
     const viewHeight = window.innerHeight
     const { top, bottom } = el.getBoundingClientRect()
-    const inView = top >= 0 && top < viewHeight || bottom >= 0 && bottom < viewHeight
     const inPrevView = bottom > -winHeight && bottom < 0
     const inNextView = top > viewHeight && top < viewHeight + winHeight
     const inSiblingView = inPrevView || inNextView
 
     if (inSiblingView) {
-      if (loadingSrc) {
-        el.src = loadingSrc
-      }
-    } else if (inView) {
-      const img = new Image()
-
-      img.addEventListener('load', () => {
-        changeStateClass(STATE_CLASS.LOADED)
-        el.src = src
-      }, { once: true })
-      img.addEventListener('error', () => {
-        changeStateClass(STATE_CLASS.ERROR)
-        el.src = src
-      }, { once: true })
-
-      changeStateClass(STATE_CLASS.LOADING)
-      img.src = src
-      this.remove(el)
+      this.loadLoadingImg(el)
     }
   }
 
-  handleViewportChange() {
+  checkIntersection(intEntry) {
+    if (intEntry.intersectionRatio) {
+      this.loadOriginImg(intEntry.target)
+    }
+  }
+
+  loadLoadingImg(el) {
+    const { loading } = el.dataset
+
+    if (loading) {
+      el.src = loading
+    }
+  }
+
+  loadOriginImg(el) {
+    const src = el.dataset.src
+    const img = new Image()
+
+    img.addEventListener('load', () => {
+      this.changeClass(el, STATE_CLASS.LOADED)
+      el.src = src
+    }, { once: true })
+    img.addEventListener('error', () => {
+      this.changeClass(el, STATE_CLASS.ERROR)
+      el.src = src
+    }, { once: true })
+
+    this.changeClass(el, STATE_CLASS.LOADING)
+    img.src = src
+  }
+
+  handleIntersectionChangeLegacy() {
     if (this.rafId) return
 
     this.rafId = requestAnimationFrame(() => {
-      this.els.forEach(el => this.checkEl(el))
+      this.els.forEach(el => this.checkIntersectionLegacy(el))
       this.rafId = null
     })
+  }
+
+  handleIntersectionChange(intEntries) {
+    intEntries.forEach(intEntry => this.checkIntersection(intEntry))
   }
 
   changeClass(el, items = []) {
