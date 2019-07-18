@@ -1,3 +1,5 @@
+const PLACEHOLDER_IMG = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg=='
+
 const CLASS_PREFIX = 'lazyload'
 
 const STATE_CLASS = {
@@ -19,7 +21,7 @@ export class LazyloadManager {
 
   add(el) {
     this.els.add(el)
-    this.changeClass(el)
+    this.loadPlaceholderImg(el)
     this.intersectionObserver.observe(el)
     this.checkIntersectionLegacy(el)
 
@@ -61,6 +63,11 @@ export class LazyloadManager {
       this.loadOriginImg(intEntry.target)
       this.remove(intEntry.target)
     }
+  }
+
+  loadPlaceholderImg(el) {
+    this.changeClass(el)
+    el.src = PLACEHOLDER_IMG
   }
 
   loadLoadingImg(el) {
