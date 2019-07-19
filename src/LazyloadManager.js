@@ -90,14 +90,17 @@ export class LazyloadManager {
       this.changeClass(el, STATE_CLASS.BEFORE_LOADED)
 
       requestAnimationFrame(() => {
-        this.changeClass(el, STATE_CLASS.LOADED)
         el.src = src
+
+        requestAnimationFrame(() => {
+          this.changeClass(el, STATE_CLASS.LOADED)
+        })
       })
     }, { once: true })
 
     img.addEventListener('error', () => {
-      this.changeClass(el, STATE_CLASS.ERROR)
       el.src = src
+      this.changeClass(el, STATE_CLASS.ERROR)
     }, { once: true })
 
     this.changeClass(el, STATE_CLASS.LOADING)
