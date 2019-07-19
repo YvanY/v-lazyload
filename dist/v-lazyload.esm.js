@@ -2,6 +2,7 @@ var PLACEHOLDER_IMG = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAY
 var CLASS_PREFIX = 'lazyload';
 var STATE_CLASS = {
   LOADING: CLASS_PREFIX + "-loading",
+  BEFORE_LOADED: CLASS_PREFIX + "-before-loaded",
   LOADED: CLASS_PREFIX + "-loaded",
   ERROR: CLASS_PREFIX + "-error"
 };
@@ -91,9 +92,13 @@ function () {
 
     var img = new Image();
     img.addEventListener('load', function () {
-      _this.changeClass(el, STATE_CLASS.LOADED);
+      _this.changeClass(el, STATE_CLASS.BEFORE_LOADED);
 
-      el.src = src;
+      requestAnimationFrame(function () {
+        _this.changeClass(el, STATE_CLASS.LOADED);
+
+        el.src = src;
+      });
     }, {
       once: true
     });
