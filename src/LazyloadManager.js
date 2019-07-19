@@ -4,6 +4,7 @@ const CLASS_PREFIX = 'lazyload'
 
 const STATE_CLASS = {
   LOADING: `${CLASS_PREFIX}-loading`,
+  BEFORE_LOADED: `${CLASS_PREFIX}-before-loaded`,
   LOADED: `${CLASS_PREFIX}-loaded`,
   ERROR: `${CLASS_PREFIX}-error`
 }
@@ -86,9 +87,14 @@ export class LazyloadManager {
     const img = new Image()
 
     img.addEventListener('load', () => {
-      this.changeClass(el, STATE_CLASS.LOADED)
-      el.src = src
+      this.changeClass(el, STATE_CLASS.BEFORE_LOADED)
+
+      requestAnimationFrame(() => {
+        this.changeClass(el, STATE_CLASS.LOADED)
+        el.src = src
+      })
     }, { once: true })
+
     img.addEventListener('error', () => {
       this.changeClass(el, STATE_CLASS.ERROR)
       el.src = src
