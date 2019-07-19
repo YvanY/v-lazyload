@@ -95,17 +95,18 @@ function () {
       _this.changeClass(el, STATE_CLASS.BEFORE_LOADED);
 
       requestAnimationFrame(function () {
-        _this.changeClass(el, STATE_CLASS.LOADED);
-
         el.src = src;
+        requestAnimationFrame(function () {
+          _this.changeClass(el, STATE_CLASS.LOADED);
+        });
       });
     }, {
       once: true
     });
     img.addEventListener('error', function () {
-      _this.changeClass(el, STATE_CLASS.ERROR);
-
       el.src = src;
+
+      _this.changeClass(el, STATE_CLASS.ERROR);
     }, {
       once: true
     });
