@@ -1,6 +1,6 @@
 {
   "name": "@yvany/v-lazyload",
-  "version": "0.1.0-beta.8",
+  "version": "0.1.0-beta.9",
   "description": "a vue directive for image lazyload",
   "main": "dist/v-lazyload.esm.js",
   "scripts": {
