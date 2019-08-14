@@ -79,11 +79,6 @@ export class LazyloadManager {
 
   loadOriginImg(el) {
     const src = el.dataset.src
-
-    if (!src) {
-      return
-    }
-
     const img = new Image()
 
     img.addEventListener('load', () => {

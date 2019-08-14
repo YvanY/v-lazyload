@@ -2,7 +2,7 @@
   "name": "@yvany/v-lazyload",
   "version": "0.1.0-beta.8",
   "description": "a vue directive for image lazyload",
-  "main": "src/index.js",
+  "main": "dist/v-lazyload.esm.js",
   "scripts": {
     "start": "webpack-dev-server --hot --config dev/webpack.config.js",
     "build": "rollup -c rollup.config.js"

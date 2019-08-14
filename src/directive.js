@@ -2,7 +2,9 @@ import lazyload from './LazyloadManager'
 
 export default {
   inserted(el) {
-    lazyload.add(el)
+    if (el.dataset.src) {
+      lazyload.add(el)
+    }
   },
 
   unbind(el) {
@@ -10,7 +12,7 @@ export default {
   },
 
   update(el, binding, vnode, oldVnode) {
-    if (vnode.data.attrs['data-src'] !== oldVnode.data.attrs['data-src']) {
+    if (vnode.data.attrs['data-src'] && (vnode.data.attrs['data-src'] !== oldVnode.data.attrs['data-src'])) {
       lazyload.remove(el)
       lazyload.add(el)
     }
