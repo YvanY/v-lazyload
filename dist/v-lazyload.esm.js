@@ -85,11 +85,6 @@ function () {
     var _this = this;
 
     var src = el.dataset.src;
-
-    if (!src) {
-      return;
-    }
-
     var img = new Image();
     img.addEventListener('load', function () {
       _this.changeClass(el, STATE_CLASS.BEFORE_LOADED);
@@ -168,13 +163,15 @@ var lazyload = new LazyloadManager();
 
 var lazyload$1 = {
   inserted: function inserted(el) {
-    lazyload.add(el);
+    if (el.dataset.src) {
+      lazyload.add(el);
+    }
   },
   unbind: function unbind(el) {
     lazyload.remove(el);
   },
   update: function update(el, binding, vnode, oldVnode) {
-    if (vnode.data.attrs['data-src'] !== oldVnode.data.attrs['data-src']) {
+    if (vnode.data.attrs['data-src'] && vnode.data.attrs['data-src'] !== oldVnode.data.attrs['data-src']) {
       lazyload.remove(el);
       lazyload.add(el);
     }
