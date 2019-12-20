@@ -87,9 +87,9 @@ export class LazyloadManager {
       requestAnimationFrame(() => {
         el.src = src
 
-        requestAnimationFrame(() => {
+        el.addEventListener('load', () => {
           this.changeClass(el, STATE_CLASS.LOADED)
-        })
+        }, { once: true })
       })
     }, { once: true })
 
