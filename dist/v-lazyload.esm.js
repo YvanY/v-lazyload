@@ -91,8 +91,10 @@ function () {
 
       requestAnimationFrame(function () {
         el.src = src;
-        requestAnimationFrame(function () {
+        el.addEventListener('load', function () {
           _this.changeClass(el, STATE_CLASS.LOADED);
+        }, {
+          once: true
         });
       });
     }, {
